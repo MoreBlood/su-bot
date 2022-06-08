@@ -3,6 +3,7 @@ import { REST } from '@discordjs/rest';
 import { Client, Intents } from 'discord.js';
 import { Routes } from 'discord-api-types/v9';
 import TelegramBot from 'node-telegram-bot-api';
+import http from 'http';
 
 config({ path: `.env.local` });
 
@@ -126,3 +127,11 @@ client.on('voiceStateUpdate', async (before, after) => {
 });
 
 client.login(process.env.TOKEN);
+
+const requestListener = function (req, res) {
+  res.writeHead(200);
+  res.end('ok');
+};
+
+const server = http.createServer(requestListener);
+server.listen(8080);
