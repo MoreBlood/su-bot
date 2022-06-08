@@ -2,13 +2,13 @@
   "name": "node-typescript-boilerplate",
   "version": "0.0.0",
   "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
-  "type": "module",
   "engines": {
     "node": ">= 16.13 <17"
   },
   "devDependencies": {
     "@types/jest": "~27.5",
     "@types/node": "~16",
+    "@types/node-telegram-bot-api": "^0.57.1",
     "@typescript-eslint/eslint-plugin": "~5.26",
     "@typescript-eslint/parser": "~5.26",
     "eslint": "~8.16",
@@ -23,6 +23,7 @@
   },
   "scripts": {
     "start": "node build/src/main.js",
+    "dev": "nodemon",
     "clean": "rimraf coverage build tmp",
     "prebuild": "npm run lint",
     "build": "tsc -p tsconfig.json",
@@ -36,6 +37,14 @@
   "author": "Jakub Synowiec <jsynowiec@users.noreply.github.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@discordjs/rest": "^0.5.0",
+    "discord-api-types": "^0.33.5",
+    "discord.js": "^13.8.0",
+    "dotenv": "^16.0.1",
+    "node-telegram-bot-api": "^0.57.0",
+    "nodemon": "^2.0.16",
+    "ts-node": "^10.8.1",
+    "tsconfig-paths": "^4.0.0",
     "tslib": "~2.4"
   },
   "volta": {
