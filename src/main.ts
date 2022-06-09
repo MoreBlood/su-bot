@@ -70,6 +70,7 @@ client.on('voiceStateUpdate', async (before, after) => {
   // const membersAfter = after.channel?.members;
 
   // TODO: if user start playing World Of Tanks, and plays for 5 minutes then send notification (not afk)
+  // TODO: clean messages after some time
 
   if (after.channel?.members.size === 1) {
     bot.sendMessage(
@@ -91,7 +92,7 @@ client.on('voiceStateUpdate', async (before, after) => {
   if (
     after.id === before.id &&
     after.streaming !== before.streaming &&
-    before.channelID === after.channelID
+    (before.channelID === after.channelID || after.channelID === null)
   ) {
     const game = after.member.presence?.activities
       .map((act) => act.name)
