@@ -1,5 +1,5 @@
 version: 1.0
-runtime: nodejs16
+runtime: 16-alpine
 build:
   commands:
     build:
@@ -7,7 +7,6 @@ build:
     post-build:
       - npm run build
 run:
-  runtime-version: 16.13.2
   command: npm start
   network:
     port: 8080
