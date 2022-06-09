@@ -76,6 +76,9 @@ client.on('voiceStateUpdate', async (before, after) => {
     bot.sendMessage(
       process.env.TG_CHAT_ID,
       [`${after.member.displayName} joined ${after.channel.name}`].join('\n'),
+      {
+        disable_notification: true,
+      },
     );
   }
 
@@ -86,6 +89,9 @@ client.on('voiceStateUpdate', async (before, after) => {
         `${after.member.displayName} left ${before.channel.name}`,
         `no users left`,
       ].join('\n'),
+      {
+        disable_notification: true,
+      },
     );
   }
 
@@ -101,9 +107,14 @@ client.on('voiceStateUpdate', async (before, after) => {
     bot.sendMessage(
       process.env.TG_CHAT_ID,
       [
-        `${after.member.displayName} ${after.streaming ? '🔴' : '😴'} `,
-        after.streaming ? `🎮 ${game || '✨'}` : '',
+        `${after.member.displayName} ${
+          after.streaming ? 'Started streaming 🔴' : 'Ended streaming 😴'
+        } `,
+        after.streaming ? `🎮 ${game || 'Unknown game'}` : '',
       ].join('\n'),
+      {
+        disable_notification: true,
+      },
     );
   }
 
@@ -124,16 +135,10 @@ client.on('voiceStateUpdate', async (before, after) => {
 client.login(process.env.TOKEN);
 
 const requestListener = function (request, response) {
-  if (request.url === '/ping.html' && request.method === 'GET') {
-    //AWS ELB pings this URL to make sure the instance is running
-    //smoothly
-    response.writeHead(200, {
-      'Content-Type': 'text/plain',
-      'Content-Length': 2,
-    });
-    response.write('OK');
-    response.end();
-  }
+  response.writeHead(200, {
+    'Content-Type': 'text/plain',
+    'Content-Length': 2,
+  });
 
   response.write('OK');
   response.end();
