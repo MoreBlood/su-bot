@@ -122,9 +122,20 @@ client.on('voiceStateUpdate', async (before, after) => {
 
 client.login(process.env.TOKEN);
 
-const requestListener = function (req, res) {
-  res.writeHead(200);
-  res.end('ok');
+const requestListener = function (request, response) {
+  if (request.url === '/ping.html' && request.method === 'GET') {
+    //AWS ELB pings this URL to make sure the instance is running
+    //smoothly
+    response.writeHead(200, {
+      'Content-Type': 'text/plain',
+      'Content-Length': 2,
+    });
+    response.write('OK');
+    response.end();
+  }
+
+  response.write('OK');
+  response.end();
 };
 
 const server = http.createServer(requestListener);
