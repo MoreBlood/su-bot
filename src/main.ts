@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import { REST } from '@discordjs/rest';
+// import { REST } from '@discordjs/rest';
 import { Client, Intents } from 'discord.js';
 import { Routes } from 'discord-api-types/v9';
 import TelegramBot from 'node-telegram-bot-api';
@@ -24,40 +24,34 @@ const bot = new TelegramBot(process.env.TG_TOKEN, { polling: true });
 //   // bot.sendMessage(chatId, resp);
 // });
 
-const commands = [
-  {
-    name: 'ping',
-    description: 'Replies with Pong!',
-  },
-];
+// const commands = [
+//   {
+//     name: 'ping',
+//     description: 'Replies with Pong!',
+//   },
+// ];
 
-const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+// const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 
-(async () => {
-  try {
-    console.log('Started refreshing application (/) commands.');
+// (async () => {
+//   try {
+//     console.log('Started refreshing application (/) commands.');
 
-    await rest.put(
-      Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID,
-      ),
-      { body: commands },
-    );
+//     await rest.put(
+//       Routes.applicationGuildCommands(
+//         process.env.CLIENT_ID,
+//         process.env.GUILD_ID,
+//       ),
+//       { body: commands },
+//     );
 
-    console.log('Successfully reloaded application (/) commands.');
-  } catch (error) {
-    console.error(error);
-  }
-})();
+//     console.log('Successfully reloaded application (/) commands.');
+//   } catch (error) {
+//     console.error(error);
+//   }
+// })();
 
-const client = new Client({
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-    Intents.FLAGS.GUILD_PRESENCES,
-  ],
-});
+const client = new Client();
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
@@ -84,7 +78,7 @@ client.on('voiceStateUpdate', async (before, after) => {
     );
   }
 
-  if (before.channel?.members.size === 0 && after.channelId === null) {
+  if (before.channel?.members.size === 0 && after.channelID === null) {
     bot.sendMessage(
       process.env.TG_CHAT_ID,
       [
@@ -97,7 +91,7 @@ client.on('voiceStateUpdate', async (before, after) => {
   if (
     after.id === before.id &&
     after.streaming !== before.streaming &&
-    before.channelId === after.channelId
+    before.channelID === after.channelID
   ) {
     const game = after.member.presence?.activities
       .map((act) => act.name)
