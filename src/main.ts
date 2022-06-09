@@ -69,6 +69,10 @@ client.on('voiceStateUpdate', async (before, after) => {
   // const membersBefore = before.channel?.members;
   // const membersAfter = after.channel?.members;
 
+  if (after.channelID !== process.env.DISCORD_VOICE_CHAT_ID) {
+    return;
+  }
+
   // TODO: if user start playing World Of Tanks, and plays for 5 minutes then send notification (not afk)
   // TODO: clean messages after some time
 
