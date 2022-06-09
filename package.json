@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "node build/src/main.js",
-    "build-and-start": "npm run build & npm run start",
+    "build-and-start": "npm run build && npm run start",
     "dev": "nodemon",
     "clean": "rimraf coverage build tmp",
     "prebuild": "npm run lint",
