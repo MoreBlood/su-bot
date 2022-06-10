@@ -50,13 +50,14 @@ client.on('voiceStateUpdate', async (before, after) => {
   const streamingChanged = after.streaming !== before.streaming;
 
   const isTheSameChannel = before.channelID === after.channelID;
-  const hasNoChannel = after.channelID === null;
+  const hasNoChannelAfter = after.channelID === null;
+  const hasNoChannelBefore = after.channelID === null;
 
   const hasOneJoinedUser = after.channel?.members.size === 1;
   const hasNoUsersLeft = before.channel?.members.size === 0;
 
   // triggers when channel has no left users after user left
-  if (hasNoUsersLeft && hasNoChannel && isTargetChannelBefore) {
+  if (hasNoUsersLeft && hasNoChannelAfter && isTargetChannelBefore) {
     sendMessageToChat(
       [
         `${after.member.displayName} left ${before.channel.name}`,
@@ -66,7 +67,7 @@ client.on('voiceStateUpdate', async (before, after) => {
   }
 
   // triggers only users joins empty channel
-  if (hasOneJoinedUser && isTargetChannelAfter) {
+  if (hasOneJoinedUser && isTargetChannelAfter && hasNoChannelBefore) {
     sendMessageToChat(
       [`${after.member.displayName} joined ${after.channel.name}`].join('\n'),
     );
@@ -75,7 +76,8 @@ client.on('voiceStateUpdate', async (before, after) => {
   const userStreamingStatusChanged = isTheSameUser && streamingChanged;
   const streamingHappeningInTheSameChannel =
     isTheSameChannel && isTargetChannelAfter;
-  const streamingStopsInTargetChannel = hasNoChannel && isTargetChannelBefore;
+  const streamingStopsInTargetChannel =
+    hasNoChannelAfter && isTargetChannelBefore;
 
   // triggers when user streaming activity changes
   if (
