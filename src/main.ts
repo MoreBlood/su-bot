@@ -51,7 +51,7 @@ client.on('voiceStateUpdate', async (before, after) => {
 
   const isTheSameChannel = before.channelID === after.channelID;
   const hasNoChannelAfter = after.channelID === null;
-  const hasNoChannelBefore = after.channelID === null;
+  const hasNoChannelBefore = before.channelID === null;
 
   const hasOneJoinedUser = after.channel?.members.size === 1;
   const hasNoUsersLeft = before.channel?.members.size === 0;
