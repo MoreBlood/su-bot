@@ -41,9 +41,10 @@ client.on('ready', () => {
 
 client.on('voiceStateUpdate', async (before, after) => {
   const isTargetChannelAfter =
-    after.channelID.toString() === process.env.DISCORD_VOICE_CHAT_ID.toString();
+    after.channelID?.toString() ===
+    process.env.DISCORD_VOICE_CHAT_ID.toString();
   const isTargetChannelBefore =
-    before.channelID.toString() ===
+    before.channelID?.toString() ===
     process.env.DISCORD_VOICE_CHAT_ID.toString();
 
   const isTheSameUser = after.id === before.id;
@@ -65,6 +66,8 @@ client.on('voiceStateUpdate', async (before, after) => {
       ].join('\n'),
     );
   }
+
+  console.log(hasOneJoinedUser, isTargetChannelAfter, hasNoChannelBefore);
 
   // triggers only users joins empty channel
   if (hasOneJoinedUser && isTargetChannelAfter && hasNoChannelBefore) {
