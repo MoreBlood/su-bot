@@ -40,12 +40,12 @@ client.on('ready', () => {
 // TODO: clean messages after some time
 
 client.on('voiceStateUpdate', async (before, after) => {
+  const DISCORD_VOICE_CHAT_ID = process.env.DISCORD_VOICE_CHAT_ID.toString();
+
   const isTargetChannelAfter =
-    after.channelID?.toString() ===
-    process.env.DISCORD_VOICE_CHAT_ID.toString();
+    after.channelID?.toString() === DISCORD_VOICE_CHAT_ID;
   const isTargetChannelBefore =
-    before.channelID?.toString() ===
-    process.env.DISCORD_VOICE_CHAT_ID.toString();
+    before.channelID?.toString() === DISCORD_VOICE_CHAT_ID;
 
   const isTheSameUser = after.id === before.id;
   const streamingChanged = after.streaming !== before.streaming;
@@ -66,8 +66,6 @@ client.on('voiceStateUpdate', async (before, after) => {
       ].join('\n'),
     );
   }
-
-  console.log(hasOneJoinedUser, isTargetChannelAfter, hasNoChannelBefore);
 
   // triggers only users joins empty channel
   if (hasOneJoinedUser && isTargetChannelAfter && hasNoChannelBefore) {
@@ -94,10 +92,13 @@ client.on('voiceStateUpdate', async (before, after) => {
     const streamStatus = after.streaming
       ? 'Started streaming 🔴'
       : 'Ended streaming 😴';
-    const gameStatus = after.streaming ? `🎮 ${game || 'Unknown game'}` : '';
+    const gameStatus: string | undefined =
+      game && after.streaming ? `🎮 ${game}` : undefined;
 
     sendMessageToChat(
-      [`${after.member.displayName} ${streamStatus} `, gameStatus].join('\n'),
+      [`${after.member.displayName} ${streamStatus} `, gameStatus]
+        .filter(Boolean)
+        .join('\n'),
     );
   }
 });
