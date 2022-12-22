@@ -5,11 +5,32 @@ import http from 'http';
 
 config({ path: `.env.local` });
 
-function sendMessageToChat(message: string) {
-  bot.sendMessage(process.env.TG_CHAT_ID, message, {
-    disable_notification: true,
-  });
+async function sendMessageToChat(message: string) {
+  try {
+    const res = await bot.sendMessage(process.env.TG_CHAT_ID, message, {
+      disable_notification: true,
+    });
+
+    setTimeout(() => bot.deleteMessage(process.env.TG_CHAT_ID, res.message_id.toString()), 60 * 30 * 1000);
+  } catch (err) {
+    console.error(err);
+  }
 }
+
+function convertTimeToMinutes(time: string) {
+  const [, hh, mm] = time.match(/(\d{2}):(\d{2})/);
+  const minutes = parseInt(hh, 10) * 60 + parseInt(mm, 10);
+  return minutes;
+}
+
+function convertDateToMinutes(time: Date) {
+  const minutes = time.getHours() * 60 + time.getMinutes();
+  return minutes;
+}
+
+const MUTE_START = convertTimeToMinutes('01:00');
+const MUTE_END = convertTimeToMinutes('08:00');
+
 
 function requestListener(request, response) {
   response.writeHead(200, {
@@ -56,6 +77,12 @@ client.on('voiceStateUpdate', async (before, after) => {
 
   const hasOneJoinedUser = after.channel?.members.size === 1;
   const hasNoUsersLeft = before.channel?.members.size === 0;
+
+  const currentDate = convertDateToMinutes(new Date());
+
+  if (currentDate > MUTE_START && currentDate < MUTE_END) {
+    return;
+  }
 
   // triggers when channel has no left users after user left
   if (hasNoUsersLeft && hasNoChannelAfter && isTargetChannelBefore) {
